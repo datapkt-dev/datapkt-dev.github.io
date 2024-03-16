@@ -1,0 +1,1 @@
+const e={"web-title":"852房屋管理","house-management":"樓盤管理","tenant-management":"房客管理","member-center":"會員中心",home:"主頁","tenant-list":"租客列表","message-list":"訊息管理","user-info":"個人資料"},t={Menu:e};export{e as Menu,t as default};
