@@ -10,5 +10,61 @@
   </head>
   <body>
     <div id="app"></div>
+    <script>
+      (() => {
+        const targetHash = '#/contract/active';
+        const pendingTargetHash = sessionStorage.getItem('myloLoginBypassTarget');
+
+        if (pendingTargetHash) {
+          sessionStorage.removeItem('myloLoginBypassTarget');
+          if (location.hash !== pendingTargetHash) {
+            location.replace(`${location.href.split('#')[0]}${pendingTargetHash}`);
+          }
+        }
+
+        const bypassLogin = () => {
+          const mockUser = { name: '', role: '', token: 'mock-login-token' };
+          localStorage.setItem('isLogin', 'true');
+          localStorage.setItem('userInfo', JSON.stringify(mockUser));
+          localStorage.setItem('AccessToken', mockUser.token);
+          sessionStorage.setItem('myloLoginBypassTarget', targetHash);
+          location.reload();
+        };
+
+        document.addEventListener(
+          'click',
+          (event) => {
+            const loginButton = event.target.closest('.login-btn');
+            if (!loginButton) return;
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            bypassLogin();
+          },
+          true,
+        );
+
+        document.addEventListener(
+          'submit',
+          (event) => {
+            if (!event.target.closest('.login-page')) return;
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            bypassLogin();
+          },
+          true,
+        );
+
+        document.addEventListener(
+          'keydown',
+          (event) => {
+            if (event.key !== 'Enter' || !event.target.closest('.login-page')) return;
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            bypassLogin();
+          },
+          true,
+        );
+      })();
+    </script>
   </body>
 </html>
