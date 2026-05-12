@@ -23,7 +23,7 @@
         }
 
         const bypassLogin = () => {
-          const mockUser = { name: '', role: '', token: 'mock-login-token' };
+          const mockUser = { name: 'MYLO 使用者', role: 'demo', token: 'mock-login-token' };
           localStorage.setItem('isLogin', 'true');
           localStorage.setItem('userInfo', JSON.stringify(mockUser));
           localStorage.setItem('AccessToken', mockUser.token);
@@ -57,7 +57,10 @@
         document.addEventListener(
           'keydown',
           (event) => {
-            if (event.key !== 'Enter' || !event.target.closest('.login-page')) return;
+            const isLoginField =
+              event.target.closest('.login-form') &&
+              ['INPUT', 'BUTTON', 'TEXTAREA'].includes(event.target.tagName);
+            if (event.key !== 'Enter' || !isLoginField) return;
             event.preventDefault();
             event.stopImmediatePropagation();
             bypassLogin();
