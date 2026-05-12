@@ -8,11 +8,11 @@
     <script type="module" crossorigin src="./assets/index-cXlvhlzc.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-e5pb7pWp.css">
   </head>
-  <body>
+  <body data-login-target="#/contract/active">
     <div id="app"></div>
     <script>
       (() => {
-        const targetHash = '#/contract/active';
+        const targetHash = document.body.dataset.loginTarget || '#/contract/active';
         const pendingTargetHash = sessionStorage.getItem('myloLoginBypassTarget');
 
         if (pendingTargetHash) {
