@@ -27,15 +27,20 @@
           localStorage.setItem('isLogin', 'true');
           localStorage.setItem('userInfo', JSON.stringify(mockUser));
           localStorage.setItem('AccessToken', mockUser.token);
-          sessionStorage.setItem('myloLoginBypassTarget', targetHash);
-          location.reload();
+          
+          // 延遲刷新以確保 localStorage 已設定
+          setTimeout(() => {
+            location.reload();
+          }, 100);
         };
 
+        // 攔截登入按鈕點擊
         document.addEventListener(
           'click',
           (event) => {
             const loginButton = event.target.closest('.login-btn');
             if (!loginButton) return;
+            console.log('Login button clicked');
             event.preventDefault();
             event.stopImmediatePropagation();
             bypassLogin();
@@ -43,30 +48,21 @@
           true,
         );
 
-        document.addEventListener(
-          'submit',
-          (event) => {
-            if (!event.target.closest('.login-page')) return;
-            event.preventDefault();
-            event.stopImmediatePropagation();
-            bypassLogin();
-          },
-          true,
-        );
+        // 如果按鈕尚未載入，添加觀察器
+        const observer = new MutationObserver(() => {
+          const loginBtn = document.querySelector('.login-btn');
+          if (loginBtn && !loginBtn._mockLoginAttached) {
+            loginBtn._mockLoginAttached = true;
+            loginBtn.addEventListener('click', (e) => {
+              console.log('Direct login button click detected');
+              e.preventDefault();
+              e.stopPropagation();
+              bypassLogin();
+            });
+          }
+        });
 
-        document.addEventListener(
-          'keydown',
-          (event) => {
-            const isLoginField =
-              event.target.closest('.login-form') &&
-              ['INPUT', 'BUTTON', 'TEXTAREA'].includes(event.target.tagName);
-            if (event.key !== 'Enter' || !isLoginField) return;
-            event.preventDefault();
-            event.stopImmediatePropagation();
-            bypassLogin();
-          },
-          true,
-        );
+        observer.observe(document.body, { childList: true, subtree: true, attributes: false });
       })();
     </script>
   </body>
